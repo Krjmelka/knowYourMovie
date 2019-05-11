@@ -535,5 +535,3 @@ let getMovies = () => {
    
 }
 module.exports = getMovies
-
-
