@@ -500,7 +500,7 @@ tt0120667
 tt1099212`
 
 const imdbID = imdb.split(/\n/ig)
-const slicedArr = imdbID.slice(320,327)
+const slicedArr = imdbID.slice(480,499)
 
 const Movie = require('../database/models/Movie')
 const https = require('https')

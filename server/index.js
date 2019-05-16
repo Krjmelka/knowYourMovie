@@ -23,26 +23,6 @@ db.authenticate()
 });
 db.sync()
 
-// const randomizer = require('./helpers/randomizer')
-// cons`t getImage = require('./helpers/getImage')
-// const randMovie = async () => {
-//   let movie = []
-  
-//   for (i=0; i < 4; i++){
-//     let mv = await Movie.findByPk(randomizer(300,false))
-//     movie.push({
-//       title: mv.movie_title,
-//       mdb_id: mv.mdb_id,
-//       answer: false
-//     })
-//   }
-//   let rand = randomizer(4)
-//   movie[rand].answer = true
-//   movie.push({imageURL: await getImage(movie[rand].mdb_id)})
-//   console.log(movie)
-// }
-// randMovie()
-
 //-----------------GraphQL--------------------------
 const schema = require('./graphql/Schema')
 const root = require('./graphql/Resolvers')
