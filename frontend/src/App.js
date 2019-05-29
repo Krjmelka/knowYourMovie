@@ -1,24 +1,31 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import configureStore from './store/configureStore'
 
 import MainPage from './pages/Main';
 import AuthPage from './pages/Auth';
-import NavBar from './pages/components/NavBar';
+import NavBar from './pages/components/NavBar/NavBar';
 import RegPage from './pages/Register';
 import GamePage from './pages/Game';
+
+const store = configureStore()
 
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
-      <Switch>
-        <Redirect from="/" to="/main" exact/>
-        <Route path="/main" component={MainPage} />
-        <Route path="/auth" component={AuthPage} />
-        <Route path="/signup" component={RegPage} />
-        <Route path="/game" component={GamePage} />
-      </Switch>
+      
+      <Provider store={store}>
+        <NavBar />
+        <Switch>
+          <Redirect from="/" to="/main" exact/>
+          <Route path="/main" component={MainPage} />
+          <Route path="/auth" component={AuthPage} />
+          <Route path="/signup" component={RegPage} />
+          <Route path="/game" component={GamePage} />
+        </Switch>
+      </Provider>
     </BrowserRouter>
   );
 }

@@ -6,16 +6,20 @@ class NavBar extends Component{
     render(){
         return(
             <header className="header-nav">
-                <Menu mode="horizontal" theme="dark" >
+                <Menu mode="horizontal" theme="dark" selectable = {false} >
                 <Menu.Item key="main">
                     <NavLink to="/">Main</NavLink>
-                </Menu.Item>
-                <Menu.Item key="auth">
-                    <NavLink to="/auth">Auth</NavLink>
                 </Menu.Item>
                 <Menu.Item key="game">
                     <NavLink to="/game">Start Game</NavLink>
                 </Menu.Item>
+                <Menu.Item key="auth">
+                    <NavLink to="/auth">Log In</NavLink>
+                </Menu.Item>
+                <Menu.Item key="signup">
+                    <NavLink to="/signup">Sign Up</NavLink>
+                </Menu.Item>
+                
                 </Menu>
             </header>
         )

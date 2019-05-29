@@ -9,5 +9,8 @@
     "dev": "nodemon index.js"
   },
   "author": "Alexandr Pokryshka",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "graphql-resolvers": "^0.3.3"
+  }
 }

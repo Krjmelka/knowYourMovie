@@ -1,10 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-
-const express_graphql = require('express-graphql')
-
 const app = express()
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+const express_graphql = require('express-graphql')
+const isAuth = require('./middleware/isAuth')
+
+
 app.use(cors())
 app.use(bodyParser.json())
 
@@ -26,12 +29,20 @@ db.sync()
 //-----------------GraphQL--------------------------
 const schema = require('./graphql/Schema')
 const root = require('./graphql/Resolvers')
+// console.log(root);
+app.use(isAuth)
 app.use('/graphql', express_graphql({
   schema,
   rootValue : root,
   graphiql: true
 }))
 
-const PORT = process.env.PORT || 8000
+// io.on('connection', (socket) => {
+//   console.log('a user connected', socket.id);
+//   socket.on("disconnect", () => {
+//     console.log("a user disconnected");
+//   })
+// });
 
-app.listen(PORT, console.log(`Listening on port ${PORT}`))
+const PORT = process.env.PORT || 8000
+http.listen(PORT, () => console.log(`Listening on port ${PORT}`))

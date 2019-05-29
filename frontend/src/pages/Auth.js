@@ -5,10 +5,11 @@ import { Form } from 'antd'
 class AuthPage extends Component{
     
     render(){
+        console.log(localStorage.token);
         const MainAuthForm = Form.create()(AuthForm)
         return(
            <div className="wrapper">
-               <h1>Auth page</h1>
+               <h1>Sign In</h1>
                <MainAuthForm />
            </div>
     );

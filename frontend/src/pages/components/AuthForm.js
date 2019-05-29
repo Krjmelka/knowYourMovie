@@ -1,17 +1,26 @@
 import React, { Component } from 'react'
 import { Form, Icon, Input, Button } from 'antd';
 import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { userAuth } from '../../store/actions/auth';
+import { withRouter } from 'react-router-dom' 
+
 
 class AuthForm extends Component{
     handleSubmit = e => {
         e.preventDefault();
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields( async (err, values) => {
           if (!err) {
             console.log('Received values of form: ', values);
+            await this.props.userAuth(values.username, values.password)
+            if(this.props.isAuth){
+              this.props.history.push('/main')
+            }
           }
         });
       };
     render(){
+        
         const { getFieldDecorator } = this.props.form;
         return(
             <Form onSubmit={this.handleSubmit} className="login-form">
@@ -37,7 +46,7 @@ class AuthForm extends Component{
           )}
         </Form.Item>
         <Form.Item>        
-          <Button type="primary" htmlType="submit" className="login-form-button">
+          <Button type="primary" htmlType="submit" className="login-form-button" block={true}>
             Log in
           </Button>
           Or <NavLink to="/signup">register now!</NavLink>
@@ -48,4 +57,15 @@ class AuthForm extends Component{
     }
 }
 
-export default AuthForm
+const mapStateToProps = (state) => {
+  return {
+    isAuth: state.userIsAuth
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userAuth: (user, password) => dispatch(userAuth(user, password))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(AuthForm))

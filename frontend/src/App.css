@@ -5,9 +5,13 @@
   align-items: center;
   justify-content: center;
   height: 500px;
+  width: 40%;
+  margin: 20px auto;
+  background-color: rgba(207, 204, 204, 0.8);
+  border-radius: 10px;
 }
 .wrapper h1 {
-  color: white;
+  color: black;
 }
 .login-form {
   max-width: 300px;
@@ -15,24 +19,9 @@
 .login-form-forgot {
   float: right;
 }
-.login-form-button {
-  width: 100%;
-}
 .ant-menu {
   display: flex;
   margin-left: 10px;
 }
-.button-answers {
-  width: 500px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-.button-answers button {
-  width: 45%;
-  margin: 10px;
-}
-.button-answers .ant-btn[disabled] {
-  cursor: pointer;
-}
+
 
