@@ -25,6 +25,7 @@ module.exports = buildSchema(`
     }
     type AuthData {
         token: String
+        score: Int
         error: String
     }
     

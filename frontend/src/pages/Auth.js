@@ -5,7 +5,6 @@ import { Form } from 'antd'
 class AuthPage extends Component{
     
     render(){
-        console.log(localStorage.token);
         const MainAuthForm = Form.create()(AuthForm)
         return(
            <div className="wrapper">

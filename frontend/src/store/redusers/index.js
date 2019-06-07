@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import { userIsAuth, authFailed, userData } from "./user"
+import { userStatus } from "./user"
+import { gameData } from "./game"
 
 export default combineReducers({
-    userIsAuth,
-    authFailed,
-    userData
+    gameData,
+    userStatus
 })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { userAuth } from '../../store/actions/auth';
@@ -7,12 +7,19 @@ import { withRouter } from 'react-router-dom'
 
 
 class AuthForm extends Component{
+  componentWillMount(){
+    if(this.props.isAuth){
+      this.props.history.push('/main')
+    }
+  }
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields( async (err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
             await this.props.userAuth(values.username, values.password)
+            if(this.props.isFailed){
+              message.error(this.props.error, 1.5)
+            }
             if(this.props.isAuth){
               this.props.history.push('/main')
             }
@@ -21,7 +28,8 @@ class AuthForm extends Component{
       };
     render(){
         
-        const { getFieldDecorator } = this.props.form;
+        const { getFieldDecorator } = this.props.form
+        const { checkingUser } = this.props
         return(
             <Form onSubmit={this.handleSubmit} className="login-form">
         <Form.Item>
@@ -46,8 +54,8 @@ class AuthForm extends Component{
           )}
         </Form.Item>
         <Form.Item>        
-          <Button type="primary" htmlType="submit" className="login-form-button" block={true}>
-            Log in
+          <Button type="primary" htmlType="submit" disabled={checkingUser} className="login-form-button" block={true}>
+            Log in {checkingUser? <Icon type="loading" /> : null}
           </Button>
           Or <NavLink to="/signup">register now!</NavLink>
         </Form.Item>
@@ -59,7 +67,10 @@ class AuthForm extends Component{
 
 const mapStateToProps = (state) => {
   return {
-    isAuth: state.userIsAuth
+    isAuth: state.userStatus.isAuth,
+    isFailed: state.userStatus.isFailed,
+    error: state.userStatus.error,
+    checkingUser: state.userStatus.checkingUser
   }
 }
 const mapDispatchToProps = (dispatch) => {

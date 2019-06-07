@@ -1,29 +1,25 @@
-import React, { Component, Suspense, lazy} from 'react'
+import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-// import GameArea from './components/GameArea/GameArea';
+import GameArea from './components/GameArea/GameArea';
 
-const GameArea = lazy(() => import('./components/GameArea/GameArea'))
 class GamePage extends Component{ 
-    componentWillMount(){
-        console.log(this.props);
-        if (!this.props.isAuth){
-            this.props.history.push('/auth')
-        }
-    } 
-     
     render(){
+        const { isAuth } = this.props
+        if (!isAuth) {
+            return <Redirect to="/auth" />
+        }
         return(
-            
-                <Suspense fallback={<h1>Loading...</h1>} >
+                <div className="wrapper">
                     <GameArea />
-                </Suspense>
-            
+                </div>
         )
     }
 }
 const mapStateToProps = (state) => {
     return {
-      isAuth: state.userIsAuth
+      isAuth: state.userStatus.isAuth
     }
   }
+ 
 export default connect(mapStateToProps)(GamePage)

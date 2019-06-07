@@ -1,25 +1,54 @@
-export function userIsAuth(state = false, action) {
-    switch (action.type) {
-        case 'USER_IS_AUTH':
-            return action.isAuth;
+const initialState = {
+    isAuth: false,
+    isFailed: false,
+    checkingUser: false,
+    signUpSuccess: false,
+    userData: {},
+    error: null
+}
 
-        default:
-            return state;
-    }
-}
-export function authFailed(state = false, action){
+export function userStatus(state = initialState, action){
     switch (action.type) {
+        case 'CHECKING_USER':
+            return {
+                ...state,
+                checkingUser: true
+            };
+        case 'USER_IS_AUTH':
+            return{
+                ...state,
+                checkingUser: false,
+                isAuth: true,
+                isFailed: false,
+                error: null,
+                userData: action.payload
+            }
         case 'AUTH_FAILED':
-            return action.isFailed;
+            return{
+                ...state,
+                checkingUser: false,
+                isFailed: true,
+                error: action.payload
+            }
+        case 'REG_COMPLETE':
+            return{
+                ...state,
+                isFailed: false,
+                checkingUser: false,
+                signUpSuccess: true,
+                error: null
+            }
+        case 'SCORE_UPDATED':
+            return{
+                ...state,
+                userData: {
+                    ...state.userData,
+                    score: action.payload
+                } 
+            }
+        case 'LOG_OUT':
+            return initialState
         default:
-            return state;
-    }
-}
-export function userData(state = null, action){
-    switch (action.type) {
-        case 'USER_DATA_REСEIVED':
-            return action.data;
-        default: 
-            return state;
+            return state
     }
 }

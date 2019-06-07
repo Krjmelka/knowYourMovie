@@ -1,4 +1,5 @@
 const Movie = require('../database/models/Movie')
+const Sequalize = require('sequelize')
 const User = require('../database/models/User')
 const randomizer = require('../helpers/randomizer')
 const getImage = require('../helpers/getImage')
@@ -34,12 +35,12 @@ async function createUser({user, password, email}){
   
   if (findUser){
       return { 
-          error: "Name is exist" 
+          error: "This Username is already in use" 
       }
   }
   else if(findEmail){
     return {
-        error: "Email is exist" 
+        error: "This email is already in use" 
     }
   }
   else {
@@ -63,7 +64,7 @@ async function userAuth({user, password}){
     let finduser = await User.findOne({where: {user}})
     if (!finduser || encryptPassword(password) !== finduser.password){
         return {
-            error: "Auth failed"
+            error: "Incorrect Username or Password"
         }
     } else {
         const token = jwt.sign({
@@ -72,13 +73,21 @@ async function userAuth({user, password}){
         },"superTopSecret")
         return {
             userId: finduser.id,
+            score: finduser.score,
             token
         }
     }
 }
-
+async function userScoreUpdate(userId) {
+    // let finduser = await User.findByPk(id)
+    // await finduser.increment('score', {by: 10})
+    await User.update({score: Sequalize.literal('score + 10')}, {where: {id: userId}})
+    let userscore =  await User.findByPk(userId)
+    return userscore.score
+}
 module.exports = {
     getMovieTask,
     createUser,
-    userAuth
+    userAuth,
+    userScoreUpdate
 }

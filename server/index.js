@@ -3,10 +3,11 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
 const http = require('http').createServer(app)
-const io = require('socket.io')(http)
 const express_graphql = require('express-graphql')
 const isAuth = require('./middleware/isAuth')
+const gameServer = require('./gameServer')
 
+gameServer.listen(http)
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -14,7 +15,7 @@ app.use(bodyParser.json())
 //-----------------Database--------------------------
 const db = require('./database/database')
 
-const Movie = require('./database/models/Movie')
+// const Movie = require('./database/models/Movie')
 // const getMovies = require('./helpers/imdbId')
 
 db.authenticate()

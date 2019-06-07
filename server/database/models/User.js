@@ -16,7 +16,8 @@ const User = db.define('User', {
         unique: true
     },
     score: {
-        type: Sequalize.STRING
+        type: Sequalize.INTEGER(11),
+        defaultValue: 0
     }
 })
 db.sync()

@@ -11,7 +11,9 @@ import RegPage from './pages/Register';
 import GamePage from './pages/Game';
 
 const store = configureStore()
-
+// store.subscribe(() => {
+//   store.getState();
+// });
 function App() {
   return (
     <BrowserRouter>

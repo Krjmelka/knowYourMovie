@@ -1,86 +1,62 @@
 import React, { Component } from 'react'
-import { Button } from 'antd'
-import { GraphQLClient } from 'graphql-request'
-import io from 'socket.io-client'
+import { Button, Icon } from 'antd'
 import './GameArea.css'
-
-const gql = new GraphQLClient("http://localhost:8000/graphql", {headers: {}})
-const socketURL = "http://localhost:8000"
+import { connect } from 'react-redux'
+import { getMovieData, updateScore } from '../../../store/actions/game'
+import io from 'socket.io-client'
+let socket = null
 class GameArea extends Component{
+    constructor(props){
+        super(props)
+        socket = io.connect('http://localhost:8000')
+    }
     state = {
-        movies: [],
-        answer: null,
-        imageUrl: "",
         answered: false
     }
-    componentWillMount(){
-        this.getMovieData()
-        this.initSocket()
-        
+    componentWillMount = () => {
+        this.props.getMovieData(socket)
+        console.log("here");
     }
-    initSocket = () => {
-        const socket = io(socketURL)
-        socket.on("connect", () => {
-            console.log("connected");
-        })
+    componentWillUnmount() {
+        socket.disconnect()
     }
     checkTheAnswer = (e) => {
         this.setState({
             answered: true
         })
-        console.log(this.state);
-        let answer = this.state.movies.find((item) => item.answer === true)
-        if(answer.title === e.target.name){
-            
-            e.target.style.background = "#179317"
-            e.target.style.borderColor = "green"
+        let answer = this.props.gameData.movies.find((item) => item.answer === true)
+        let btnAnswer = e.target.style
+        if(answer.title === e.target.name){        
+            btnAnswer.background = "#179317"
+            btnAnswer.borderColor = "green"
+            this.props.updateScore(this.props.userId, socket)
         }
         else{
-            e.target.style.background = "#ef2f2f"
-            e.target.style.borderColor = "red"
+            btnAnswer.background = "#ef2f2f"
+            btnAnswer.borderColor = "red"
             let correctButton = document.getElementsByClassName(answer.mdb_id.toString())
             correctButton[0].style.background = "#179317"
             correctButton[0].style.borderColor = "green"
         }
-
     }
-    getMovieData = async () =>{
-        try{
-            // this.setState({
-            //     movies: []
-            // })
-            let res = await gql.request(`query GetMovies{
-                getMovieTask{
-                  movies {
-                    mdb_id
-                    title
-                    answer
-                  }
-                  imageURL
-                }
-              }`,{})
-
-            this.setState({
-                movies: res.getMovieTask.movies,
-                answer: res.getMovieTask.movies.find((item) => item.answer === true),
-                imageUrl: res.getMovieTask.imageURL,
-                answered: false
-            })
-
-            }
-            catch(err){
-                console.log(err);
-            }
+    nextQuestion = (e) => {
+        this.setState({
+            answered: false
+        })
+        this.props.getMovieData(socket)
     }
     
     render(){
+        const { isLoading, isLoaded, gameData } = this.props
+        if (isLoading) return <div><Icon type="loading" style={{fontSize: "50px", color: "#00305e"}} /></div>
+        if (!isLoaded || !gameData) return null
+        
         return(
-            <article className="wrapper">
+            <article className="game-area">
                 <h1>Choose the correct movie title</h1>
-                
-                <div className="game-img" style={{background : `url("${this.state.imageUrl}") 100% 100% no-repeat`}} /> 
+                <div className="game-img" style={{background : `url("${gameData.imageURL}") 50% 50% no-repeat`}} /> 
                 <div className="button-answers">
-                    {this.state.movies.map((item)=> 
+                    {gameData.movies.map((item)=> 
                         <Button 
                             type="primary" 
                             disabled={this.state.answered} 
@@ -92,10 +68,25 @@ class GameArea extends Component{
                         </Button>
                     )}
                 </div>
-                <Button style={{display: this.state.answered ? "block" : "none" }} onClick={this.getMovieData} className="next-button" >Next</Button>
+                <Button style={{display: this.state.answered ? "block" : "none" }} onClick={this.nextQuestion} className="next-button" >Next</Button>
             </article>
         )
     }
 }
+const mapStateToProps = (state) => {
+    return {
+      gameData: state.gameData.data,
+      isLoading: state.gameData.isLoading,
+      isLoaded: state.gameData.isLoaded,
+      userId: state.userStatus.userData.userId
+    }
+  }
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      getMovieData: (socket) => dispatch(getMovieData(socket)),
+      updateScore: (userId, socket) => dispatch(updateScore(userId, socket))
 
-export default GameArea
+    }
+  }
+
+  export default connect(mapStateToProps,mapDispatchToProps)(GameArea)
