@@ -29,6 +29,13 @@ async function getMovieTask(){
       imageURL
   }
 }
+async function getMoviesArr(){
+    let movies = []
+    for (var i=0; i < 10; i++){
+        movies.push(await getMovieTask())  
+    }
+    return movies
+}
 async function createUser({user, password, email}){
   let findUser = await User.findOne({where: {user}})
   let findEmail = await User.findOne({where: {email}})
@@ -85,9 +92,18 @@ async function userScoreUpdate(userId) {
     let userscore =  await User.findByPk(userId)
     return userscore.score
 }
+async function getUserData(userId) {
+    let res =  await User.findByPk(userId.id)
+    return {
+        score: res.score,
+        userId: res.id
+    }
+}
 module.exports = {
     getMovieTask,
     createUser,
     userAuth,
-    userScoreUpdate
+    userScoreUpdate,
+    getUserData,
+    getMoviesArr
 }

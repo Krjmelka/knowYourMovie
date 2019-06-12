@@ -4,6 +4,7 @@ module.exports = buildSchema(`
     type Query {
         getMovieTask: MovieTask
         userAuth(user: String!, password: String!): AuthData!
+        getUserData(id: Int!): User
     }
     type Mutation {
         createUser(user: String!, password: String!, email: String!): User
@@ -21,6 +22,7 @@ module.exports = buildSchema(`
         user: String
         password: String
         email: String
+        score: Int
         error: String
     }
     type AuthData {

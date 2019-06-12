@@ -9,13 +9,15 @@ class GameArea extends Component{
     constructor(props){
         super(props)
         socket = io.connect('http://localhost:8000')
+        console.log(socket);
     }
     state = {
         answered: false
     }
+    // console.log(socket);
     componentWillMount = () => {
         this.props.getMovieData(socket)
-        console.log("here");
+        // console.log(socket);
     }
     componentWillUnmount() {
         socket.disconnect()
@@ -78,13 +80,15 @@ const mapStateToProps = (state) => {
       gameData: state.gameData.data,
       isLoading: state.gameData.isLoading,
       isLoaded: state.gameData.isLoaded,
-      userId: state.userStatus.userData.userId
+      userId: state.userStatus.userData.userId,
+      username: state.userStatus.userData.username
     }
   }
   const mapDispatchToProps = (dispatch) => {
     return {
       getMovieData: (socket) => dispatch(getMovieData(socket)),
       updateScore: (userId, socket) => dispatch(updateScore(userId, socket))
+      
 
     }
   }

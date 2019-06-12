@@ -14,6 +14,7 @@ export const updateScore = (userId, socket) => {
         socket.emit('updateScore', userId, (data) => dispatch(scoreUpdated(data)))
     }
 }
+
 export const getMovieData = (socket) => {
     return (dispatch) => {
         dispatch(gameData())

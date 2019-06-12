@@ -16,8 +16,11 @@ class NavBar extends Component{
                 <Menu.Item key="main">
                     <NavLink to="/">Main</NavLink>
                 </Menu.Item>
-                <Menu.Item key="game">
-                    <NavLink to="/game">Start Game</NavLink>
+                <Menu.Item key="single-game">
+                    <NavLink to="/single-game">Start Game</NavLink>
+                </Menu.Item>
+                <Menu.Item key="multiplayer-game">
+                    <NavLink to="/multiplayer-game">Start Co-op Game</NavLink>
                 </Menu.Item>
                 {isAuth ? 
                     // <>

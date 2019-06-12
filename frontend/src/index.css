@@ -5,14 +5,25 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: black;
-  background: url('./bg.jpg') 100% 100%;
-  background-size: cover;
-  /* background: rgb(255,255,255);
-  background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(47,206,198,1) 100%); */
+  background: black;
+  /* background: url('./bg.jpg') 100% 100%; */
+  /* background-size: cover; */
+  background: rgb(255,255,255);
+  background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgb(0, 0, 0) 100%);
 
 }
-
+body::after {
+  content: "";
+  background: url('./bg.jpg') 100% 100%;
+  background-size: cover;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

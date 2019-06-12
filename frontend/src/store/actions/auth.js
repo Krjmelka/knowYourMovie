@@ -52,7 +52,7 @@ export function userAuth(user, password) {
     }
 }
 export function checkToken(){
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch(checkUser())
         
         if(!localStorage.token){
@@ -60,8 +60,23 @@ export function checkToken(){
             return
         }
         let data = jwtDecode(localStorage.token)
-        dispatch(userData(data))
+        let score = await getUserScore(data.userId)
+        dispatch(userData({...data, score}))
+
     }
+}
+async function getUserScore(id){
+    try{
+        let res =  await gql.request(`query Score($id: Int!){
+            getUserData(id: $id){
+              score
+            }
+          }`,{id})
+        return res.getUserData.score
+    }
+    catch(err){
+        console.log(err);
+    }    
 }
 export function logOut(){
     return (dispatch) => {

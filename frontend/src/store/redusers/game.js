@@ -17,6 +17,8 @@ export function gameData(state = gameState, action) {
                 isLoaded: true,
                 data: action.payload
             }
+        case 'EXIT_GAME' || 'LOG_OUT':
+            return gameState
         default:
             return state;
     }

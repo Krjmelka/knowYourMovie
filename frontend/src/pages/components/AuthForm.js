@@ -7,11 +7,6 @@ import { withRouter } from 'react-router-dom'
 
 
 class AuthForm extends Component{
-  componentWillMount(){
-    if(this.props.isAuth){
-      this.props.history.push('/main')
-    }
-  }
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields( async (err, values) => {
