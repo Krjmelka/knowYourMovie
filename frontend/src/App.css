@@ -23,15 +23,25 @@
   display: flex;
   margin-left: 10px;
 }
+.main-logo{
+  font-family: 'Indie Flower', cursive;
+  font-size: 40px;
+}
 
 @media screen and (max-width: 1023px){
   .wrapper {
     width: 60%;
   }
+  .game-area .game-img {
+    width: 80%;
+  }
 }
 @media screen and (max-width: 767px){
   .wrapper {
     width: 90%;
+  }
+  .game-area .game-img {
+    width: 70%;
   }
   
 }

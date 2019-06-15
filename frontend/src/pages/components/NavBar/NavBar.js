@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Menu, Button, Icon } from 'antd'
 import { NavLink } from 'react-router-dom' 
 import { connect } from 'react-redux'
+import './NavBar.css'
 import { logOut, checkToken } from '../../../store/actions/auth'
 const { SubMenu } = Menu
 class NavBar extends Component{
@@ -13,8 +14,8 @@ class NavBar extends Component{
         return(
             <header className="header-nav">
                 <Menu mode="horizontal" theme="dark" selectable = {false} >
-                <Menu.Item key="main">
-                    <NavLink to="/">Main</NavLink>
+                <Menu.Item key="main" className="logo">
+                    <NavLink to="/">Know Your Movie</NavLink>
                 </Menu.Item>
                 <Menu.Item key="single-game">
                     <NavLink to="/single-game">Start Game</NavLink>

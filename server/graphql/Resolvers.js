@@ -85,10 +85,8 @@ async function userAuth({user, password}){
         }
     }
 }
-async function userScoreUpdate(userId) {
-    // let finduser = await User.findByPk(id)
-    // await finduser.increment('score', {by: 10})
-    await User.update({score: Sequalize.literal('score + 10')}, {where: {id: userId}})
+async function userScoreUpdate(userId, score) {
+    await User.update({score: Sequalize.literal(`score + ${score}`)}, {where: {id: userId}})
     let userscore =  await User.findByPk(userId)
     return userscore.score
 }

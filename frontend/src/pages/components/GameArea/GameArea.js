@@ -9,7 +9,6 @@ class GameArea extends Component{
     constructor(props){
         super(props)
         socket = io.connect('http://localhost:8000')
-        console.log(socket);
     }
     state = {
         answered: false
@@ -56,7 +55,7 @@ class GameArea extends Component{
         return(
             <article className="game-area">
                 <h1>Choose the correct movie title</h1>
-                <div className="game-img" style={{background : `url("${gameData.imageURL}") 50% 50% no-repeat`}} /> 
+                <div className="game-img" style={{background : `url("${gameData.imageURL}") no-repeat`}} /> 
                 <div className="button-answers">
                     {gameData.movies.map((item)=> 
                         <Button 

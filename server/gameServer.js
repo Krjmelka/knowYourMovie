@@ -19,7 +19,7 @@ const gameServer ={
                 gamers = gamers.filter(n => n.socket !== socket)
                 emitGamers()
             })
-            socket.on('updateScore', async (userId, fn) => fn(await userScoreUpdate(userId)))
+            socket.on('updateScore', async (userId, fn) => fn(await userScoreUpdate(userId, 10)))
             socket.on('getGame', async (fn) => fn(await getMovieTask()))
             socket.on('multiConnect', data => {
                 gamers.push({
@@ -32,7 +32,6 @@ const gameServer ={
                     sessionScore: 0
 
                 })
-                // console.log(gamers);
                 emitGamers()
             })
             socket.on('invite', async (id, fn) => {
@@ -68,30 +67,39 @@ const gameServer ={
                     gameInit(opponent, gamer, data)                   
                 })
 
-                let gameInit = (gamer, opponent, data) => {
+                let gameInit = async (gamer, opponent, data) => {
                     gamer.answered = true
                     gamer.sessionScore =+ data
-                    console.log(gamer.nick, gamer.sessionScore);
                     if(opponent.answered && gamer.answered) {
                         counter++
-                        if(counter < 10){
-                            console.log(counter);
-                            console.log(gamer.sessionScore, opponent.sessionScore);
+                        if(counter < 3){
                             let data = {...tasks[counter], gameNumber: counter+1}
                             gamer.socket.emit('getGameTask', {data, score: opponent.sessionScore})
                             opponent.socket.emit('getGameTask', {data, score: gamer.sessionScore})
                             gamer.answered = false
                             opponent.answered = false
-                            
                         }
                         else {
-                            console.log("here", counter);
+                            if (gamer.sessionScore > opponent.sessionScore){
+                                gamer.socket.emit('gotaWinner', gamer.nick)
+                                opponent.socket.emit('gotaWinner', gamer.nick)
+                                gamer.socket.emit('updateUserScore', await userScoreUpdate(gamer.userId, 200))
+                                emitGamers()
+                            }
+                            else if(opponent.sessionScore > gamer.sessionScore){
+                                gamer.socket.emit('gotaWinner', opponent.nick)
+                                opponent.socket.emit('gotaWinner', opponent.nick)
+                                opponent.socket.emit('updateUserScore', await userScoreUpdate(opponent.userId, 200))
+                                emitGamers()
+                            }
+                            else {
+                                gamer.socket.emit('gotaWinner', {data})
+                                opponent.socket.emit('gotaWinner', {data})
+                                emitGamers()
+                            }
+                            
                         }
-                        // let data = {...tasks[counter], gameNumber: counter+1}
-                        // gamer.socket.emit('getGameTask', {data, score: opponent.sessionScore})
-                        // opponent.socket.emit('getGameTask', {data, score: gamer.sessionScore})
-                        // gamer.answered = false
-                        // opponent.answered = false
+
                     }
                 }
                 

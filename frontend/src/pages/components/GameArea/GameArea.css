@@ -27,9 +27,19 @@
   .next-button {
     position: absolute;
   }
-  .game-img {
+  .game-area .game-img {
     background-size: cover;
     height: 281px;
     width: 90%;
     box-shadow: 1px 1px 10px black;
+  }
+  @media screen and (max-width: 1023px){
+    .game-area .game-img {
+      width: 80%;
+    }
+  }
+  @media screen and (max-width: 767px){
+    .game-area .game-img {
+      width: 80%;
+    }
   }

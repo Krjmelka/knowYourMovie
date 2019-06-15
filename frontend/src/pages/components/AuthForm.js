@@ -12,7 +12,7 @@ class AuthForm extends Component{
         this.props.form.validateFields( async (err, values) => {
           if (!err) {
             await this.props.userAuth(values.username, values.password)
-            if(this.props.isFailed){
+            if(this.props.isFailed && this.props.error){
               message.error(this.props.error, 1.5)
             }
             if(this.props.isAuth){

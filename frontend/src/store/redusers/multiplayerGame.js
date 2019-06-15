@@ -68,6 +68,15 @@ export function multiplayerGameStatus(state = initialState, action) {
                 gameReady: true,
                 data: action.payload
             }
+        case 'GOT_A_WINNER': 
+            return {
+                ...state,
+                winner: action.payload
+            }
+        // case 'PLAY_AGAIN':
+        //     return {
+        //         initialState
+        //     }
         case 'EXIT_GAME' || 'LOG_OUT':
             return initialState
         default:

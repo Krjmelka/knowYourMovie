@@ -12,6 +12,7 @@ export function userStatus(state = initialState, action){
         case 'CHECKING_USER':
             return {
                 ...state,
+                isFailed: false,
                 checkingUser: true
             };
         case 'USER_IS_AUTH':

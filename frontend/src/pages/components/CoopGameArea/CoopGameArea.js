@@ -2,31 +2,43 @@ import React, { Component } from 'react'
 import { Button, Icon } from 'antd'
 import './CoopGameArea.css'
 import { connect } from 'react-redux'
-import { getPlayersList, invitePlayer, gotInvite, readyForGame, exitGame, gameData, nextMovie, updateScore } from '../../../store/actions/multiplayerGame'
+import { withRouter } from 'react-router-dom' 
+import { 
+    getPlayersList, 
+    invitePlayer, 
+    gotInvite, 
+    readyForGame, 
+    exitGame, 
+    gameData, 
+    nextMovie, 
+    updateScore, 
+    gotaWinner,
+    startAgain,
+    globalScoreUpdate } from '../../../store/actions/multiplayerGame'
 import io from 'socket.io-client'
-import GameArea from '../GameArea/GameArea';
 let socket = null
 
 class CoopGameArea extends Component{
     constructor(props){
         super(props)
-        
         socket = io.connect('http://localhost:8000')
         socket.emit('multiConnect', {username: this.props.username, userId: this.props.userId})
         socket.on('gamers', (data) => {
-            // console.log(data);
             this.props.getPlayersList(data)
         })
         socket.on('gotInvite', (data) => {
-            console.log(data);
             this.props.gotInvite(data)
         })
         socket.on('readyForGame', () => {
-            console.log("ready");
         })
         socket.on('getGameTask', (data) => {
-            console.log(data);
             this.props.movieData(data)
+        })
+        socket.on('gotaWinner', (data) => {
+            this.props.gotaWinner(data)
+        })
+        socket.on('updateUserScore', (data) => {
+            this.props.globalScoreUpdate(data)
         })
     }
     state = {
@@ -66,13 +78,32 @@ class CoopGameArea extends Component{
             answered: false
         })
         this.props.nextMovie(socket, this.props.playerScore)
-        // this.props.getMovieData(socket)
     }
+    GamerWinner = () => (
+        <>
+            <h1>Congratulations!</h1> <div>You are a winner! You got a 200 points.</div>
+        </>
+    )
+    OpponentWinner = (props) => (
+        <>
+            <h1>{props.opponent} is a winner</h1> <div>Better luck next time =(</div>
+        </>
+    )
+
     render(){
-        const { gamers, opponent, playerReady, gameData, waitingForOpponent, username, playerScore } = this.props
-        // console.log(gamers, opponent);
+        const { gamers, opponent, playerReady, gameData, waitingForOpponent, username, playerScore, winner } = this.props
+        
         if(!gamers) return <div><Icon type="loading" style={{fontSize: "50px", color: "#00305e"}} /></div>
+        
         if(playerReady && opponent && !gameData) return <div><Icon type="loading" style={{fontSize: "50px", color: "#00305e"}} /></div>
+        
+        if(winner) return (
+            <article className="game-area">
+                {winner === username ? <this.GamerWinner /> : <this.OpponentWinner opponent = {opponent.username}/>}
+                <Button type="primary" onClick={() => this.props.history.push('/main')}>Got it</Button>
+            </article>
+        )
+        
         if(playerReady && opponent && gameData) return (
                 <article className="game-area">
                     <div className="game-info">
@@ -80,7 +111,6 @@ class CoopGameArea extends Component{
                         <div>Your Game Score: {playerScore}</div>
                         <div>{opponent.username} Game Score: {opponent.score}</div>
                     </div>
-                    {/* {waitingForOpponent? <div>Waiting for opponent answer...</div> : null} */}
                     <div className="game-img" style={{background : `url("${gameData.imageURL}") 50% 50% no-repeat`}} /> 
                     <div className="button-answers">
                         {gameData.movies.map((item)=> 
@@ -110,10 +140,11 @@ class CoopGameArea extends Component{
             <article className="game-area">
                 <h2>Choose your opponent</h2>
                 {opponent? <Button onClick={this.acceptTheInvite}>Accept {opponent.username}</Button> : null}
-                {gamers.map(item => 
-                    <div key={item.userId}>{item.nick} {item.nick === username ? " - Its you": null}<Button disabled={item.ready} style={{visibility: item.nick === username ? "hidden": "visible"}} size={"small"} onClick={() => this.props.invitePlayer(socket, item.id)}>Invite</Button></div>
-                )}
-
+                {gamers.length === 1? <div>There are no players online =(</div> : 
+                    gamers.map(item => 
+                        <div key={item.userId} style={{display: item.nick === username? "none" : "block" }}>{item.nick} <Button disabled={item.ready} style={{visibility: item.nick === username ? "hidden": "visible"}} size={"small"} onClick={() => this.props.invitePlayer(socket, item.id)}>Invite</Button></div>
+                    )
+                }
             </article>
         )
     }
@@ -127,7 +158,8 @@ const mapStateToProps = (state) => {
       playerReady: state.multiplayerGameStatus.playerReady,
       gameData: state.multiplayerGameStatus.data,
       waitingForOpponent: state.multiplayerGameStatus.waitingForOpponent,
-      playerScore: state.multiplayerGameStatus.gameScore
+      playerScore: state.multiplayerGameStatus.gameScore,
+      winner: state.multiplayerGameStatus.winner
     }
   }
   const mapDispatchToProps = (dispatch) => {
@@ -139,9 +171,12 @@ const mapStateToProps = (state) => {
       exitGame: () => dispatch(exitGame()),
       movieData: (data) => dispatch(gameData(data)),
       nextMovie: (socket, data) => dispatch(nextMovie(socket, data)),
-      updateScore: ( data) => dispatch(updateScore( data))
+      updateScore: ( data) => dispatch(updateScore( data)),
+      gotaWinner: (data) => dispatch(gotaWinner(data)),
+      startAgain: () => dispatch(startAgain()),
+      globalScoreUpdate: (data) => dispatch(globalScoreUpdate(data))
         
     }
   }
 
-  export default connect(mapStateToProps,mapDispatchToProps)(CoopGameArea)
+  export default connect(mapStateToProps,mapDispatchToProps)(withRouter(CoopGameArea))
