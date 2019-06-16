@@ -1,67 +1,53 @@
 import React, { Component } from 'react'
-import { Menu, Button, Icon } from 'antd'
+import { Menu, Button, Layout } from 'antd'
 import { NavLink } from 'react-router-dom' 
 import { connect } from 'react-redux'
 import './NavBar.css'
 import { logOut, checkToken } from '../../../store/actions/auth'
-const { SubMenu } = Menu
+// const { SubMenu } = Menu
 class NavBar extends Component{
+    state = {
+        collapsed: false,
+    }
     componentDidMount(){
         this.props.checkToken()
+    }
+    handleClick = e => {
+        console.log('click ', e);
+        this.setState({
+            collapsed: !this.state.collapsed,
+        })
     }
     render(){
         const { isAuth, userData } = this.props
         return(
-            <header className="header-nav">
-                <Menu mode="horizontal" theme="dark" selectable = {false} >
-                <Menu.Item key="main" className="logo">
-                    <NavLink to="/">Know Your Movie</NavLink>
-                </Menu.Item>
-                <Menu.Item key="single-game">
-                    <NavLink to="/single-game">Start Game</NavLink>
-                </Menu.Item>
-                <Menu.Item key="multiplayer-game">
-                    <NavLink to="/multiplayer-game">Start Co-op Game</NavLink>
-                </Menu.Item>
+
+                <Layout.Header style={ { width: '100%'}}>
+                <Menu mode="horizontal" theme="dark" selectable = {false} style={{ lineHeight: '64px' }}>
+                    <Menu.Item key="main" className="logo">
+                        <NavLink to="/">Know Your Movie</NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="single-game">
+                        <NavLink to="/single-game">Single Game</NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="multiplayer-game">
+                        <NavLink to="/multiplayer-game">Multiplayer Game</NavLink>
+                    </Menu.Item>
                 {isAuth ? 
-                    // <>
-                    // <div key="user">
-                    //     {userData.username}
-                    // </div>
-                    // <Button onClick={this.props.logOut}>
-                    //     Log Out
-                    // </Button>
-                    // </>
-                    <SubMenu 
-                        title={
-                            <span className="submenu-title-wrapper">
-                            <Icon type="user" />
-                            {userData.username}
-                            </span>
-                        }>
-                        <Menu.Item key="user">
-                            <Icon type="setting" />Current Score : {userData.score}
-                        </Menu.Item>
-                        <Menu.Item key="logout">
-                        <Button onClick={this.props.logOut}>
-                         Log Out
-                     </Button>
-                        </Menu.Item>
-                    </SubMenu>
+                    <Menu.Item key="user" className="user-auth" style={{float: "right"}}>
+                        {userData.username} : <span className="user-score">{userData.score}</span>
+                        <Button onClick={this.props.logOut} type="primary">
+                              Log Out
+                        </Button>
+                    </Menu.Item>
                     :
-                  
-                    <Menu.Item key="auth">
+                    <Menu.Item key="auth" style={{float: 'right'}}>
                         <NavLink to="/auth">Log In</NavLink>
                     </Menu.Item>
-                    // <Menu.Item key="signup">
-                    //     <NavLink to="/signup">Sign Up</NavLink>
-                    // </Menu.Item>
-                    
                 }
-                
-                
                 </Menu>
-            </header>
+                </Layout.Header>
+
         )
     }
 }

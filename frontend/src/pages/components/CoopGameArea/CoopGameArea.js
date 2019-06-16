@@ -137,12 +137,20 @@ class CoopGameArea extends Component{
             )
         
         return(
-            <article className="game-area">
+            <article className="gamers-list">
                 <h2>Choose your opponent</h2>
                 {opponent? <Button onClick={this.acceptTheInvite}>Accept {opponent.username}</Button> : null}
                 {gamers.length === 1? <div>There are no players online =(</div> : 
                     gamers.map(item => 
-                        <div key={item.userId} style={{display: item.nick === username? "none" : "block" }}>{item.nick} <Button disabled={item.ready} style={{visibility: item.nick === username ? "hidden": "visible"}} size={"small"} onClick={() => this.props.invitePlayer(socket, item.id)}>Invite</Button></div>
+                        <div key={item.userId} style={{display: item.nick === username? "none" : "block" }}>
+                            {item.nick} {waitingForOpponent ?  
+                                <span style={{ float: "right"}}>
+                                    <Icon type="loading" style={{fontSize: "20px", color: "#00305e"}} />
+                                    <span style={{ color:"#00305e", cursor: "pointer", fontSize: "10px"}} onClick={() => this.props.invitePlayer(socket, item.id)}>  Cancel</span>
+                                </span> 
+                                    : 
+                                <span style={{ float: "right", color:"#00305e", cursor: "pointer"}} onClick={() => this.props.invitePlayer(socket, item.id)}>Invite</span>}
+                        </div>
                     )
                 }
             </article>

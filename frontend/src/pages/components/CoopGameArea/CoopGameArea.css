@@ -4,6 +4,17 @@
     align-items: center;
     justify-content: center;
   }
+.gamers-list {
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  width: 70%;
+  align-items: center;
+}
+.gamers-list div {
+  width: 60%;
+  font-size: 16px;
+}
   
   .button-answers {
       width: 100%;

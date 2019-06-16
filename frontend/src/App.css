@@ -19,10 +19,6 @@
 .login-form-forgot {
   float: right;
 }
-.ant-menu {
-  display: flex;
-  margin-left: 10px;
-}
 .main-logo{
   font-family: 'Indie Flower', cursive;
   font-size: 40px;

@@ -9,6 +9,7 @@ const gameServer = require('./gameServer')
 
 gameServer.listen(http)
 
+// app.use(express.static('public'))
 app.use(cors())
 app.use(bodyParser.json())
 
