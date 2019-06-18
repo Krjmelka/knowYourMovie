@@ -34,7 +34,7 @@ class NavBar extends Component{
                         <NavLink to="/multiplayer-game">Multiplayer Game</NavLink>
                     </Menu.Item>
                 {isAuth ? 
-                    <Menu.Item key="user" className="user-auth" style={{float: "right"}}>
+                    <Menu.Item key="user" className="user-auth" style={{float: "right", cursor: "default"}}>
                         {userData.username} : <span className="user-score">{userData.score}</span>
                         <Button onClick={this.props.logOut} type="primary">
                               Log Out

@@ -4,15 +4,17 @@ const gotOpponent = (payload) => ({type: 'GOT_OPPONENT', payload})
 
 const getData = () => ({type: 'GET_DATA'})
 
+const opponentCanceled = () => ({type: 'GAME_CANCELED'})
+
 const playerReady = () => ({type: 'PLAYER_READY'})
+
+const clearOpponent = () => ({type: 'REMOVE_OPPONENT'})
 
 const updOpponentsScore = (payload) => ({type: 'OPPONENST_SCORE_UPDATE', payload})
 
 const winner = (payload) => ({type: 'GOT_A_WINNER', payload})
 
 const getDataSuccess = (payload) => ({type: 'DATA_SUCCESS',payload})
-
-const resetGame = () => ({type: 'PLAY_AGAIN'})
 
 const sessionScoreUpdate = (payload) => ({type: 'UPDATE_SCORE', payload})
 
@@ -42,10 +44,10 @@ export const gotInvite = (data) => {
         dispatch(gotOpponent(data))
     }
 }
-export const readyForGame =() => {
+export const readyForGame =(socket) => {
     return (dispatch) => {
         dispatch(playerReady())
-
+        socket.emit('readyForGame')
     }
 }
 export const nextMovie = (socket, data)=> {
@@ -57,6 +59,18 @@ export const nextMovie = (socket, data)=> {
 export const updateScore = (data) => {
     return (dispatch) => {
         dispatch(sessionScoreUpdate(data))
+    }
+}
+export const removeOpponent = (socket) => {
+    return (dispatch) => {
+        dispatch(clearOpponent())
+        dispatch(opponentCanceled())
+        socket.emit('cancelGame')
+    }
+}
+export const canceledGame = () => {
+    return (dispatch) => {
+        dispatch(opponentCanceled())
     }
 }
 export const exitGame =() => {
@@ -81,9 +95,5 @@ export const globalScoreUpdate = (data) => {
         dispatch(scoreUpdate(data))
     }
 }
-export const startAgain = () => {
-    return (dispatch) => {
-        dispatch(resetGame())
-    }
-}
+
 

@@ -20,7 +20,7 @@ const User = db.define('User', {
         defaultValue: 0
     }
 })
-db.sync()
+// db.sync()
 
 
 module.exports = User

@@ -13,7 +13,7 @@ const Movie = db.define('Movie', {
     timestamps: true,
     updatedAt: false
 })
-db.sync()
+// db.sync()
 
 
 module.exports = Movie

@@ -13,8 +13,9 @@ import {
     nextMovie, 
     updateScore, 
     gotaWinner,
-    startAgain,
-    globalScoreUpdate } from '../../../store/actions/multiplayerGame'
+    globalScoreUpdate,
+    removeOpponent,
+    canceledGame } from '../../../store/actions/multiplayerGame'
 import io from 'socket.io-client'
 let socket = null
 
@@ -23,31 +24,21 @@ class CoopGameArea extends Component{
         super(props)
         socket = io.connect('http://localhost:8000')
         socket.emit('multiConnect', {username: this.props.username, userId: this.props.userId})
-        socket.on('gamers', (data) => {
-            this.props.getPlayersList(data)
-        })
-        socket.on('gotInvite', (data) => {
-            this.props.gotInvite(data)
-        })
-        socket.on('readyForGame', () => {
-        })
-        socket.on('getGameTask', (data) => {
-            this.props.movieData(data)
-        })
-        socket.on('gotaWinner', (data) => {
-            this.props.gotaWinner(data)
-        })
-        socket.on('updateUserScore', (data) => {
-            this.props.globalScoreUpdate(data)
-        })
+
+        socket.on('gamers', (data) => this.props.getPlayersList(data))
+
+        socket.on('gotInvite', (data) => this.props.gotInvite(data))
+
+        socket.on('getGameTask', (data) => this.props.movieData(data))
+
+        socket.on('gotaWinner', (data) => this.props.gotaWinner(data))
+
+        socket.on('updateUserScore', (data) => this.props.globalScoreUpdate(data))
+
+        socket.on('opponentCanceled', () => this.props.canceledGame())
     }
     state = {
         answered: false
-    }
-    acceptTheInvite = () => {
-        socket.emit('readyForGame')
-        this.props.readyForGame()
-
     }
     componentWillUnmount() {
         socket.disconnect()
@@ -61,15 +52,18 @@ class CoopGameArea extends Component{
         let btnAnswer = e.target.style
         if(answer.title === e.target.name){        
             btnAnswer.background = "#179317"
-            btnAnswer.borderColor = "green"            
+            btnAnswer.borderColor = "green"
+            btnAnswer.color = "white"            
             this.props.updateScore(this.props.playerScore + 10)
         }
         else{
             btnAnswer.background = "#ef2f2f"
             btnAnswer.borderColor = "red"
-            let correctButton = document.getElementsByClassName(answer.mdb_id.toString())
-            correctButton[0].style.background = "#179317"
-            correctButton[0].style.borderColor = "green"
+            btnAnswer.color = "white"
+            let correctButton = document.getElementsByClassName(answer.mdb_id.toString())[0]
+            correctButton.style.background = "#179317"
+            correctButton.style.borderColor = "green"
+            correctButton.style.color = "white"
             this.props.updateScore(this.props.playerScore - 5)
         }
     }
@@ -79,19 +73,24 @@ class CoopGameArea extends Component{
         })
         this.props.nextMovie(socket, this.props.playerScore)
     }
-    GamerWinner = () => (
+    gamerWinner = () => (
         <>
-            <h1>Congratulations!</h1> <div>You are a winner! You got a 200 points.</div>
+            <h1>Congratulations!</h1> <p>You are a winner! You got a 200 points.</p>
         </>
     )
-    OpponentWinner = (props) => (
+    opponentWinner = (props) => (
         <>
-            <h1>{props.opponent} is a winner</h1> <div>Better luck next time =(</div>
+            <h1>{props.opponent} is a winner</h1> <p>Better luck next time =(</p>
+        </>
+    )
+    drawResult = () => (
+        <>
+            <h1>Its draw</h1><p>Both got a 100 points.</p>
         </>
     )
 
     render(){
-        const { gamers, opponent, playerReady, gameData, waitingForOpponent, username, playerScore, winner } = this.props
+        const { gamers, opponent, playerReady, gameData, dataIsLoading, waitingForOpponent, username, playerScore, winner } = this.props
         
         if(!gamers) return <div><Icon type="loading" style={{fontSize: "50px", color: "#00305e"}} /></div>
         
@@ -99,32 +98,39 @@ class CoopGameArea extends Component{
         
         if(winner) return (
             <article className="game-area">
-                {winner === username ? <this.GamerWinner /> : <this.OpponentWinner opponent = {opponent.username}/>}
-                <Button type="primary" onClick={() => this.props.history.push('/main')}>Got it</Button>
+                {winner.draw ? <this.drawResult /> : 
+                    winner.username === username ? <this.gamerWinner /> : 
+                        <this.opponentWinner opponent = {opponent.username}/>
+                }
+                <Button type="primary" onClick={() => this.props.history.push('/main')}>Main menu</Button>
             </article>
         )
         
         if(playerReady && opponent && gameData) return (
                 <article className="game-area">
                     <div className="game-info">
-                        <div>Game {gameData.gameNumber} of 10</div>
-                        <div>Your Game Score: {playerScore}</div>
-                        <div>{opponent.username} Game Score: {opponent.score}</div>
+                        <div><p>Your score:</p><p style={{fontSize: "20px"}}>{playerScore}</p></div>
+                        <div><p>Game</p> <p style={{fontSize: "20px"}}>{gameData.gameNumber} of 10</p></div>
+                        <div><p>{opponent.username}</p><p style={{fontSize: "20px"}}>{opponent.score}</p></div>
                     </div>
-                    <div className="game-img" style={{background : `url("${gameData.imageURL}") 50% 50% no-repeat`}} /> 
-                    <div className="button-answers">
-                        {gameData.movies.map((item)=> 
-                            <Button 
-                                type="primary" 
-                                disabled={this.state.answered || waitingForOpponent} 
-                                key={item.mdb_id}
-                                className={item.mdb_id.toString()}
-                                name={item.title} 
-                                onClick={this.checkTheAnswer}> 
-                                {item.title}
-                            </Button>
-                        )}
-                    </div>
+                    {dataIsLoading ? <Icon type="loading" style={{fontSize: "50px", color: "#00305e"}} /> : 
+                        <>
+                            <div className="game-img" style={{background : `url("${gameData.imageURL}") 50% 50% no-repeat`}} /> 
+                            <div className="button-answers">
+                                {gameData.movies.map((item)=> 
+                                    <Button 
+                                        type="primary" 
+                                        disabled={this.state.answered || waitingForOpponent} 
+                                        key={item.mdb_id}
+                                        className={item.mdb_id.toString()}
+                                        name={item.title} 
+                                        onClick={this.checkTheAnswer}> 
+                                        {item.title}
+                                    </Button>
+                                )}
+                            </div>
+                        </>
+                    }
                     <Button 
                         type="primary" 
                         style={{cursor: "pointer", display: this.state.answered || waitingForOpponent ? "block" : "none" }}
@@ -139,17 +145,44 @@ class CoopGameArea extends Component{
         return(
             <article className="gamers-list">
                 <h2>Choose your opponent</h2>
-                {opponent? <Button onClick={this.acceptTheInvite}>Accept {opponent.username}</Button> : null}
-                {gamers.length === 1? <div>There are no players online =(</div> : 
+                {opponent? 
+                    <div style={{margin: "5px"}} >
+                        <Button 
+                            type="primary" 
+                            onClick={() => this.props.readyForGame(socket)}>
+                                Accept {opponent.username}
+                        </Button>
+                        <Button 
+                            type="primary" 
+                            style={{float: "right"}} 
+                            onClick={() => this.props.removeOpponent(socket)}>
+                                Dismiss
+                        </Button>
+                    </div> : null
+                }
+                {waitingForOpponent? 
+                    <div>
+                        <span>Waiting for opponent...</span>
+                        <Button 
+                            type="primary" 
+                            size={"small"} 
+                            style={{float: "right"}} 
+                            onClick={() => this.props.removeOpponent(socket)}>
+                                Cancel
+                        </Button>
+                    </div> : null
+                }
+                {gamers.length === 1? <div>There are no players online </div> : 
                     gamers.map(item => 
-                        <div key={item.userId} style={{display: item.nick === username? "none" : "block" }}>
-                            {item.nick} {waitingForOpponent ?  
-                                <span style={{ float: "right"}}>
-                                    <Icon type="loading" style={{fontSize: "20px", color: "#00305e"}} />
-                                    <span style={{ color:"#00305e", cursor: "pointer", fontSize: "10px"}} onClick={() => this.props.invitePlayer(socket, item.id)}>  Cancel</span>
-                                </span> 
-                                    : 
-                                <span style={{ float: "right", color:"#00305e", cursor: "pointer"}} onClick={() => this.props.invitePlayer(socket, item.id)}>Invite</span>}
+                        <div key={item.userId} style={{display: item.nick === username? "none" : "block" }}>{item.nick} 
+                            <Button 
+                                type="primary" 
+                                disabled={item.ready || waitingForOpponent || opponent || item.waiting} 
+                                style={{float: "right", visibility: item.nick === username ? "hidden": "visible", cursor: "pointer"}} 
+                                size={"small"} 
+                                onClick={() => this.props.invitePlayer(socket, item.id)}>
+                                    Invite
+                            </Button>
                         </div>
                     )
                 }
@@ -164,6 +197,7 @@ const mapStateToProps = (state) => {
       userId: state.userStatus.userData.userId,
       username: state.userStatus.userData.username,
       playerReady: state.multiplayerGameStatus.playerReady,
+      dataIsLoading: state.multiplayerGameStatus.dataIsLoading,
       gameData: state.multiplayerGameStatus.data,
       waitingForOpponent: state.multiplayerGameStatus.waitingForOpponent,
       playerScore: state.multiplayerGameStatus.gameScore,
@@ -181,8 +215,9 @@ const mapStateToProps = (state) => {
       nextMovie: (socket, data) => dispatch(nextMovie(socket, data)),
       updateScore: ( data) => dispatch(updateScore( data)),
       gotaWinner: (data) => dispatch(gotaWinner(data)),
-      startAgain: () => dispatch(startAgain()),
-      globalScoreUpdate: (data) => dispatch(globalScoreUpdate(data))
+      globalScoreUpdate: (data) => dispatch(globalScoreUpdate(data)),
+      removeOpponent: (socket) => dispatch(removeOpponent(socket)),
+      canceledGame: () => dispatch(canceledGame())
         
     }
   }

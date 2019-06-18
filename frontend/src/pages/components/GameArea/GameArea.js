@@ -13,10 +13,8 @@ class GameArea extends Component{
     state = {
         answered: false
     }
-    // console.log(socket);
     componentWillMount = () => {
         this.props.getMovieData(socket)
-        // console.log(socket);
     }
     componentWillUnmount() {
         socket.disconnect()
@@ -25,6 +23,7 @@ class GameArea extends Component{
         this.setState({
             answered: true
         })
+        
         let answer = this.props.gameData.movies.find((item) => item.answer === true)
         let btnAnswer = e.target.style
         if(answer.title === e.target.name){        

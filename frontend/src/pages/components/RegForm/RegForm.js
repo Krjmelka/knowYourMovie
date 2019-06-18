@@ -128,7 +128,16 @@ class RegForm extends Component{
                     }
                     >
                     {getFieldDecorator('nickname', {
-                        rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
+                        rules: [{ 
+                            required: true, 
+                            message: 'Please input your nickname!'
+                        },{
+                            min: 4,
+                            message: 'Nickname must be 4 symbols minimum!'
+                        },{
+                            max: 10,
+                            message: 'Nickname must be 10 symbols maximum!'
+                        }],
                     })(<Input />)}
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>

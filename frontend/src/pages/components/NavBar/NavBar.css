@@ -5,11 +5,12 @@
     word-spacing: 1px;
 }
 .user-auth:hover {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.6);
 }
 .ant-menu button {
     margin-left: 10px;
 }
 .user-score {
     color: gold;
+    cursor: "default";
 }

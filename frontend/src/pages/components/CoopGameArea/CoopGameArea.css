@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 90%;
   }
 .gamers-list {
   display: flex;
@@ -12,8 +13,9 @@
   align-items: center;
 }
 .gamers-list div {
-  width: 60%;
+  width: 80%;
   font-size: 16px;
+  margin-bottom: 5px;
 }
   
   .button-answers {
@@ -42,15 +44,37 @@
       background-size: cover;
       height: 281px;
       width: 90%;
-      box-shadow: 1px 1px 10px black;
+      /* box-shadow: 1px 1px 10px black; */
     }
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  width: 90%;
+  
+}
+.game-info div {
+  width: 25%;
+  min-height: 50px;
+  background-color:#00305e;
+  color: white;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1px 1px 5px black;
+}
+.game-info p {
+  margin-bottom: 0;
+}
     @media screen and (max-width: 1023px){
       .game-area .game-img {
-        width: 80%;
+        width: 90%;
       }
     }
     @media screen and (max-width: 767px){
       .game-area .game-img {
-        width: 80%;
+        width: 90%;
       }
     }

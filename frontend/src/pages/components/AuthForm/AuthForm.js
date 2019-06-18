@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Form, Icon, Input, Button, message } from 'antd';
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { userAuth } from '../../store/actions/auth';
+import { userAuth } from '../../../store/actions/auth';
 import { withRouter } from 'react-router-dom' 
 
 

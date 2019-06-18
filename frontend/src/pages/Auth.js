@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AuthForm from './components/AuthForm'
+import AuthForm from './components/AuthForm/AuthForm'
 import { Form } from 'antd'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'

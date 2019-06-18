@@ -11,9 +11,9 @@ module.exports = override(
    modifyVars: { 
        '@primary-color': '#00305e',
        '@border-radius-base': '0px',
-       '@btn-disable-bg' : '@btn-primary-bg',
-       '@btn-disable-color' : 'white',
-       '@btn-disable-border' : '@btn-disable-bg'
+      //  '@btn-disable-bg' : '@btn-primary-bg',
+      //  '@btn-disable-color' : 'white',
+      //  '@btn-disable-border' : '@btn-disable-bg'
        
        
 

@@ -2,9 +2,7 @@ const initialState ={
     waitingForOpponent : false,
     dataIsLoading: false,
     gameDataLoaded : false,
-    gotInvite: false,
-    inviteAccepted: false,
-    gameReady : false,
+    playerReady: false,
     gameScore: 0,
     gamers : null,
     opponent : null,
@@ -27,7 +25,6 @@ export function multiplayerGameStatus(state = initialState, action) {
             return {
                 ...state,
                 waitingForOpponent: false,
-                gotInvite: false,
                 opponent: action.payload
             }
         case 'OPPONENST_SCORE_UPDATE':
@@ -42,11 +39,6 @@ export function multiplayerGameStatus(state = initialState, action) {
             return {
                 ...state,
                 playerReady: true
-            }
-        case 'GOT_INVITE':
-            return {
-                ...state,
-                gotInvite: true
             }
         case 'GET_DATA':
             return {
@@ -65,7 +57,6 @@ export function multiplayerGameStatus(state = initialState, action) {
                 waitingForOpponent: false,
                 dataIsLoading: false,
                 gameDataLoaded: true,
-                gameReady: true,
                 data: action.payload
             }
         case 'GOT_A_WINNER': 
@@ -73,10 +64,18 @@ export function multiplayerGameStatus(state = initialState, action) {
                 ...state,
                 winner: action.payload
             }
-        // case 'PLAY_AGAIN':
-        //     return {
-        //         initialState
-        //     }
+        case 'REMOVE_OPPONENT':
+            return {
+                ...state,
+                opponent: null
+            }
+        case 'GAME_CANCELED':
+            return {
+                ...state,
+                waitingForOpponent: false,
+                playerReady: false,
+                opponent: null
+            }
         case 'EXIT_GAME' || 'LOG_OUT':
             return initialState
         default:
