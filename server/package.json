@@ -11,6 +11,17 @@
   "author": "Alexandr Pokryshka",
   "license": "ISC",
   "dependencies": {
-    "graphql-resolvers": "^0.3.3"
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-graphql": "^0.8.0",
+    "graphql": "^14.3.1",
+    "graphql-resolvers": "^0.3.3",
+    "jsonwebtoken": "^8.5.1",
+    "mariadb": "^2.0.5",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.8.10",
+    "sha.js": "^2.4.11",
+    "socket.io": "^2.2.0"
   }
 }
