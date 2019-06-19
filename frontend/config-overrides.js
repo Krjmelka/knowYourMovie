@@ -10,13 +10,7 @@ module.exports = override(
    javascriptEnabled: true,
    modifyVars: { 
        '@primary-color': '#00305e',
-       '@border-radius-base': '0px',
-      //  '@btn-disable-bg' : '@btn-primary-bg',
-      //  '@btn-disable-color' : 'white',
-      //  '@btn-disable-border' : '@btn-disable-bg'
-       
-       
-
+       '@border-radius-base': '0px',   
     },
  }),
 );

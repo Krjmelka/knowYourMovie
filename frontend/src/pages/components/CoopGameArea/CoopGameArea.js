@@ -172,7 +172,7 @@ class CoopGameArea extends Component{
                         </Button>
                     </div> : null
                 }
-                {gamers.length === 1? <div>There are no players online </div> : 
+                {gamers.length === 1? <p style={{fontSize: "16px"}}>There are no players online </p> : 
                     gamers.map(item => 
                         <div key={item.userId} style={{display: item.nick === username? "none" : "block" }}>{item.nick} 
                             <Button 
