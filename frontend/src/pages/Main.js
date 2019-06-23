@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import { Button } from 'antd'
 
 class MainPage extends Component{
+    componentWillMount(){
+        console.log(process.env);
+    }
     render(){
         return(
             <div className="wrapper">
                 <h1 className="main-logo">Know Your Movie</h1>
                 <div className="main-text">
-                    <p>Wellcome to online interactive game</p>
+                    <p>Welcome to online interactive game</p>
                     <p>to choose the correct movie title</p>
                     <p>by image</p>
                 </div>

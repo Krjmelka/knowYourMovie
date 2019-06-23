@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
 
-const gql = new GraphQLClient("http://localhost:8000/graphql", {headers: {}})
+const gql = new GraphQLClient("https://knowyourmovie.herokuapp.com/graphql", {headers: {}})
 
 function checkUser() {
     return {

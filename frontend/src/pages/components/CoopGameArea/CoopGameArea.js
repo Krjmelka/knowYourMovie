@@ -22,7 +22,7 @@ let socket = null
 class CoopGameArea extends Component{
     constructor(props){
         super(props)
-        socket = io.connect('http://localhost:8000')
+        socket = io.connect('https://knowyourmovie.herokuapp.com')
         socket.emit('multiConnect', {username: this.props.username, userId: this.props.userId})
 
         socket.on('gamers', (data) => this.props.getPlayersList(data))

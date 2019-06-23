@@ -8,7 +8,7 @@ let socket = null
 class GameArea extends Component{
     constructor(props){
         super(props)
-        socket = io.connect('http://localhost:8000')
+        socket = io.connect('https://knowyourmovie.herokuapp.com')
     }
     state = {
         answered: false
