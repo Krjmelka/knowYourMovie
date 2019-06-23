@@ -9,9 +9,10 @@ const gameServer = require('./gameServer')
 
 gameServer.listen(http)
 
-// app.use(express.static('public'))
+app.use(express.static('public'))
 app.use(cors())
 app.use(bodyParser.json())
+app.use(redirectUnmatched)
 
 console.log(process.env.PORT)
 //-----------------Database--------------------------
@@ -27,15 +28,18 @@ db.authenticate()
   console.error('Unable to connect to the database:', err);
 });
 db.sync()
-
+function redirectUnmatched(req, res) {
+  res.redirect('/');
+}
 //-----------------GraphQL--------------------------
 const schema = require('./graphql/Schema')
 const root = require('./graphql/Resolvers')
+
 app.use(isAuth)
 app.use('/graphql', express_graphql({
   schema,
   rootValue : root,
-  graphiql: true
+  graphiql: false
 }))
 
 
