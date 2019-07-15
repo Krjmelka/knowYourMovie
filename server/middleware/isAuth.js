@@ -8,6 +8,8 @@ module.exports = (req, res, next) => {
         return next()
         console.log("here")
         console.log("hello")
+
+        console.log("he")
         
     }
     const token = authHeader.split(" ")[1]
