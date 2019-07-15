@@ -7,6 +7,7 @@ module.exports = (req, res, next) => {
         req.isAuth = false
         return next()
         console.log("here")
+        console.log("hello")
         
     }
     const token = authHeader.split(" ")[1]
