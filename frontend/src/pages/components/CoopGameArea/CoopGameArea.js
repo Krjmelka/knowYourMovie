@@ -48,6 +48,7 @@ class CoopGameArea extends Component{
         this.setState({
             answered: true
         })
+        console.log("here")
         let answer = this.props.gameData.movies.find((item) => item.answer === true)
         let btnAnswer = e.target.style
         if(answer.title === e.target.name){        
