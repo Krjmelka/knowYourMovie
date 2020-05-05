@@ -1,6 +1,6 @@
 const Sequalize = require('sequelize')
 const db = require('../database')
-
+console.log('test')
 const Movie = db.define('Movie', {
     mdb_id: {
         type: Sequalize.INTEGER(11),
